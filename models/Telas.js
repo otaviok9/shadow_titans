@@ -199,7 +199,7 @@ class Telas {
         }
     }
 
-    desenha_sobre() {
+desenha_sobre() {
         this._fundo_menu()
 
         des.fillStyle = '#a060ff'
@@ -214,32 +214,35 @@ class Telas {
         // Card professor
         des.strokeStyle = '#00e5aa'
         des.lineWidth = 2
-        des.strokeRect(30, 348, 1140, 88)
+        des.strokeRect(30, 348, 1140, 100)
         des.fillStyle = 'rgba(0,229,170,0.05)'
-        des.fillRect(30, 348, 1140, 88)
+        des.fillRect(30, 348, 1140, 100)
         des.fillStyle = '#00e5aa'
         des.font = '11px "Press Start 2P"'
         des.textAlign = 'center'
         des.fillText('🎓 PROFESSOR ORIENTADOR (PRODUCT OWNER)', 600, 375)
         des.fillStyle = 'white'
         des.font = '15px "Press Start 2P"'
-        des.fillText('Prof. Carlos', 600, 405)
+        des.fillText('Prof. Carlos', 600, 407)
         des.fillStyle = 'rgba(255,255,255,0.35)'
         des.font = '9px "Press Start 2P"'
-        des.fillText('Programação de Aplicativos', 600, 428)
+        des.fillText('Programação de Aplicativos', 600, 434)
 
-        // Tecnologias
+        // Tecnologias — esticado pra ocupar o espaço até o botão VOLTAR
         des.strokeStyle = '#a060ff'
         des.lineWidth = 2
-        des.strokeRect(30, 452, 1140, 56)
+        des.strokeRect(30, 464, 1140, 128)
         des.fillStyle = 'rgba(140,80,255,0.05)'
-        des.fillRect(30, 452, 1140, 56)
+        des.fillRect(30, 464, 1140, 128)
         des.fillStyle = '#a060ff'
         des.font = '10px "Press Start 2P"'
-        des.fillText('🛠️ HTML5 | Canvas API | JavaScript ES6+', 600, 476)
+        des.fillText('🛠️ HTML5 | CSS3 | Canvas API | JavaScript ES6+', 600, 498)
+        des.fillStyle = 'rgba(255,255,255,0.45)'
+        des.font = '9px "Press Start 2P"'
+        des.fillText('🎮 100% feito do zero, sem frameworks ou engines prontas', 600, 528)
         des.fillStyle = 'rgba(255,255,255,0.3)'
         des.font = '9px "Press Start 2P"'
-        des.fillText('© 2026 Shadow Titans - Todos os direitos reservados', 600, 498)
+        des.fillText('© 2026 Shadow Titans - Todos os direitos reservados', 600, 562)
 
         this._botao('VOLTAR', 600, 645, '#5c00c7', '#2e0060')
         des.textAlign = 'left'

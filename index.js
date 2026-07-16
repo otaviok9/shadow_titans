@@ -76,12 +76,40 @@ let IMG = {}
     ['tiro_vilao_fase4',     'img/zul_tiro01.png'],
 
     // ── Foto da equipe (tela SOBRE) ──
-    ['foto_paulo', 'img/foto_paulo.png'],
+    ['foto_paulo',  'img/foto_paulo.png'],
+    ['foto_pedro',  'img/foto_pedro.png'],
+    ['foto_davi',   'img/foto_davi.jpeg'],
+    ['foto_krefta', 'img/foto_krefta.png'],
 
 ].forEach(([k, src]) => {
     IMG[k] = new Image()
     IMG[k].src = src
 })
+
+// ═══════════════════════════════════════════════════════════════
+//  ÁUDIO / EFEITOS SONOROS
+// ═══════════════════════════════════════════════════════════════
+let SOM = {}
+;[
+    ['tiro',    'img/som_tiro.mp3',      0.5], // toca sempre que qualquer herói ou vilão atira (campanha e 1 V 1)
+    ['batida',  'img/musica_batida.mp3', 0.6], // toca quando um tiro acerta o herói ou o vilão (campanha e 1 V 1)
+    ['coletar', 'img/musica_coletar.mp3',0.6], // toca quando o herói pega um coração/coletável
+].forEach(([k, src, vol]) => {
+    SOM[k] = new Audio(src)
+    SOM[k].volume = vol
+})
+
+// Toca um efeito sonoro. Usa um clone do <audio> pra permitir sons
+// sobrepostos (ex: vários tiros seguidos não cortam o som um do outro).
+function tocar_som(nome) {
+    let base = SOM[nome]
+    if (!base) return
+    let clone = base.cloneNode()
+    clone.volume = base.volume
+    // .play() pode rejeitar antes da 1ª interação do usuário (política de
+    // autoplay do navegador) — ignoramos o erro pra não travar o jogo.
+    clone.play().catch(() => {})
+}
  
 // ═══════════════════════════════════════════════════════════════
 //  OBJETOS
@@ -147,13 +175,11 @@ Object.entries(CHAVES_1V1).forEach(([nome, chaves]) => {
     }
 })
 
-// ═══════════════════════════════════════════════════════════════
-//  EQUIPE (tela SOBRE) — 4 vagas: Paulo Otávio + 3 a definir
-// ═══════════════════════════════════════════════════════════════
+//  EQUIPE (tela SOBRE) — 4 vagas
 const DESENVOLVEDORES = [
     {
         nome:      'Paulo Otávio',
-        cargo:     'Desenvolvedor',
+        cargo:     'Developer',
         curso:     'Técnico em Desenvolvimento de Sistemas',
         foto:      'foto_paulo',
         instagram: { texto: '@__paulo.otv', url: 'https://www.instagram.com/__paulo.otv' },
@@ -163,25 +189,25 @@ const DESENVOLVEDORES = [
         nome:      'Pedro Augusto',
         cargo:     'Scrum Master',
         curso:     'Técnico em Desenvolvimento de Sistemas',
-        foto:      null,
-        instagram: { texto: '@instagram', url: null },
-        github:    { texto: 'GitHub',     url: null },
+        foto:      'foto_pedro',
+        instagram: { texto: '@pedrinqzx', url: 'https://www.instagram.com/pedrinqzx/' },
+        github:    { texto: 'pedrok9',     url: 'https://github.com/pedrok9-dev' },
     },
     {
         nome:      'Davi Hames',
-        cargo:     'Desenvolvedor',
+        cargo:     'Developer',
         curso:     'Técnico em Desenvolvimento de Sistemas',
-        foto:      null,
-        instagram: { texto: '@instagram', url: null },
-        github:    { texto: 'GitHub',     url: null },
+        foto:      'foto_davi',
+        instagram: { texto: '@davi.hams', url: 'https://www.instagram.com/davi.hams/' },
+        github:    { texto: 'davidbillsiu',url: 'https://github.com/davidbillsiu' },
     },
     {
         nome:      'Pedro Krefta',
-        cargo:     'Desenvolvedor',
+        cargo:     'Developer',
         curso:     'Técnico em Desenvolvimento de Sistemas',
-        foto:      null,
-        instagram: { texto: '@instagram', url: null },
-        github:    { texto: 'GitHub',     url: null },
+        foto:      'foto_krefta',
+        instagram: { texto: '@pedro_tkd', url: 'https://www.instagram.com/pedro__tkd/' },
+        github:    { texto: 'pedro-krefta',url: 'https://github.com/pedro-krefta' },
     },
 ]
 
@@ -420,7 +446,7 @@ const FALAS_POS_LUTA_FASE4 = [
     },
     {
         personagem: 'Narrador',
-        fala: 'E assim, trabalhando em equipe e confiando na liderança e nas habilidades de cada um, os Jovens Titãs salvaram as meninas, protegeram sua casa e trouxeram a paz de volta para Jump City.',
+        fala: 'E assim, trabalhando em equipe e confiando na liderança e nas habilidades de cada um, os Jovens Titãs salvaram as meninas, protegeram sua casa e trouxeram a paz de volta para Itapema City.',
         cor: '#c8b8ff',
         fundo: 'torre'
     },
@@ -752,6 +778,7 @@ function atirar_heroi() {
     let velTiroHeroi = modo1v1 ? 14 : 20
     tirosHeroi.push(new Tiro(heroi.x + heroi.w, heroi.y + heroi.h/2 - 3, velTiroHeroi, 0, 'heroi'))
     heroi.timerSpriteAtirando = 14 // quadros que o sprite "atirando" fica visível (1V1)
+    tocar_som('tiro')
 }
  
 function atirar_vilao() {
@@ -763,6 +790,7 @@ function atirar_vilao() {
         {vx:-6, vy: -3},
         {vx:-6, vy:  3},
     ].forEach(a => tirosVilao.push(new Tiro(tx, ty, a.vx, a.vy, 'vilao')))
+    tocar_som('tiro')
 }
 
 // Disparo do Jogador 2 no modo 1 V 1 (tecla P), com cooldown próprio
@@ -776,6 +804,7 @@ function atirar_vilao_jogador() {
     let ty = vilao.y + vilao.h / 2
     tirosVilao.push(new Tiro(tx, ty, -14, 0, 'vilao'))
     vilao.timerSpriteAtirando = 14 // quadros que o sprite "atirando" fica visível (1V1)
+    tocar_som('tiro')
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -829,6 +858,7 @@ function atirar_vilao_fase4() {
 
     vilao.padraoAtaque++
     vilao.intervalTiro = furia ? 48 : 70 // fúria final = ataca com mais frequência (mas não impossível)
+    tocar_som('tiro')
 }
  
 function spawn_coracao() {
@@ -844,17 +874,18 @@ function spawn_coracao() {
  
 function colisoes() {
     tirosHeroi.forEach(t => {
-        if (t.ativo && t.colid(vilao)) { t.ativo = false; vilao.vida--; telas.ativar_flash() }
+        if (t.ativo && t.colid(vilao)) { t.ativo = false; vilao.vida--; telas.ativar_flash(); tocar_som('batida') }
     })
     tirosVilao.forEach(t => {
         if (t.ativo && t.colid(heroi)) {
-            t.ativo = false; heroi.vida--; telas.ativar_flash()
+            t.ativo = false; heroi.vida--; telas.ativar_flash(); tocar_som('batida')
         }
     })
     coletaveis.forEach(c => {
         if (c.ativo && heroi.colid(c)) {
             c.ativo = false
             heroi.vida = Math.min(heroi.vida + 1, heroi.vidaMax)
+            tocar_som('coletar')
         }
     })
 }
@@ -1212,4 +1243,4 @@ function main() {
     requestAnimationFrame(main)
 }
  
-main()
+main() 
